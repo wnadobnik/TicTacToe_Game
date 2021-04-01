@@ -1,6 +1,5 @@
 import random
 
-
 class TicTacToe:
 
     # param1 defines x and y dimension of the board
