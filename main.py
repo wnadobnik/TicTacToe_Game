@@ -1,5 +1,6 @@
 import random
 
+
 class TicTacToe:
 
     # param1 defines x and y dimension of the board
@@ -146,14 +147,18 @@ class TicTacToe:
                     elif self.is_computer(x + 1, y - 1) and self.is_available(x + 2, y - 2):
                         self.log_move(x + 2, y - 2)
                         return
-                if self.is_available(x, y) and self.is_available(x + 1, y) and self.is_available(x + 2, y):
+                elif self.is_available(x, y) and self.is_available(x + 1, y) and self.is_available(x + 2, y):
                     self.log_move(x, y)
+                    return
                 elif self.is_available(x, y) and self.is_available(x, y + 1) and self.is_available(x, y + 2):
                     self.log_move(x, y)
+                    return
                 elif self.is_available(x, y) and self.is_available(x + 1, y + 1) and self.is_available(x + 2, y + 2):
                     self.log_move(x, y)
+                    return
                 elif self.is_available(x, y) and self.is_available(x - 1, y + 1) and self.is_available(x - 2, y + 2):
                     self.log_move(x, y)
+                    return
 
     # check if field exists and is empty
 
@@ -172,7 +177,81 @@ class TicTacToe:
             return False
 
     def check_victory(self):
-        pass
+        # horizontal check
+        counter = 0
+        if self.next_move == self.mark_computer:
+            last = self.mark_player
+        else:
+            last = self.mark_computer
+
+        for x in range(self.board_size - 1):
+            if self.board[self.last_move_loc['y']][x] == last:
+                counter += 1
+            else:
+                counter = 0
+            if counter == 3:
+                return True
+
+        #vertical check
+        counter = 0
+        for y in range(self.board_size - 1):
+            if self.board[y][self.last_move_loc['x']] == last:
+                counter += 1
+            else:
+                counter = 0
+            if counter == 3:
+                return True
+
+        # angle1 check
+        start_x = self.last_move_loc['x']
+        start_y = self.last_move_loc['y']
+        counter = 0
+        while True:
+            if start_x == 0 or start_y == 0:
+                break
+            else:
+                start_x -= 1
+                start_y -= 1
+
+        while True:
+            if start_x == self.board_size or start_y == self.board_size:
+                break
+            else:
+                if self.board[start_y][start_x] == last:
+                    counter += 1
+                else:
+                    counter = 0
+                start_x += 1
+                start_y += 1
+
+        if counter == 3:
+            return True
+
+        # angle2 check
+        start_x = self.last_move_loc['x']
+        start_y = self.last_move_loc['y']
+        counter = 0
+        while True:
+            if start_x == self.board_size - 1 or start_y == 0:
+                break
+            else:
+                start_x += 1
+                start_y -= 1
+
+        while True:
+            if start_x == -1 or start_y == self.board_size:
+                break
+            else:
+                if self.board[start_y][start_x] == last:
+                    counter += 1
+                else:
+                    counter = 0
+                start_x -= 1
+                start_y += 1
+        if counter == 3:
+            return True
+
+        return False
 
 
 a = TicTacToe(3, True)
@@ -181,5 +260,13 @@ while True:
     y = int(input())
     a.log_move(x, y)
     a.display()
+    print(a.last_move_loc)
+    if a.check_victory():
+        print('zwycięstwo gracza')
+        break
     a.computer_move()
     a.display()
+    print(a.last_move_loc)
+    if a.check_victory():
+        print('zwycięstwo gracza')
+        break
